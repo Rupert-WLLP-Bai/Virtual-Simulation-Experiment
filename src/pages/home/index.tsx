@@ -1,23 +1,27 @@
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/auth";
+import { useEffect, useState } from "react";
+
+interface Experiment {
+  id: number;
+  module_id: number;
+  name: string;
+  path: string;
+  description?: string;
+}
 
 export default function HomePage() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+  const [experiments, setExperiments] = useState<Experiment[]>([]);
 
-  // 模拟实验列表
-  const experiments = [
-    { id: "exp1", name: "软件度量", module: 1, path: "cosmic" },
-    { id: "exp5", name: "单方案评价", module: 5, path: "singlescheme" },
-    { id: "exp6", name: "碳排放交易", module: 6, path: "tanpaifang" },
-    { id: "exp7", name: "NPV/IRR评价", module: 7, path: "jinxianzhi" },
-    { id: "exp7", name: "盈亏平衡分析", module: 7, path: "yinkuipingheng" },
-    { id: "exp8", name: "敏感性分析", module: 8, path: "minganxing" },
-    { id: "exp9", name: "不确定性决策", module: 9, path: "buqueding" },
-    { id: "exp10", name: "决策树分析", module: 10, path: "decisiontree" },
-    { id: "exp47", name: "蒙特卡洛模拟", module: 47, path: "montecarlo" },
-  ];
+  useEffect(() => {
+    fetch("/api/menu/student_experiment")
+      .then((res) => res.json())
+      .then(setExperiments)
+      .catch(console.error);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -45,16 +49,16 @@ export default function HomePage() {
           {experiments.map((exp) => (
             <button
               key={exp.id}
-              onClick={() => navigate(`/exp${exp.module}/${exp.path}`)}
+              onClick={() => navigate(`/exp${exp.module_id}/${exp.path}`)}
               className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-left"
             >
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <span className="text-blue-600 font-bold">{exp.module}</span>
+                  <span className="text-blue-600 font-bold">{exp.module_id}</span>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800">{exp.name}</h3>
-                  <p className="text-sm text-gray-500">实验 {exp.module}</p>
+                  <p className="text-sm text-gray-500">实验 {exp.module_id}</p>
                 </div>
               </div>
             </button>

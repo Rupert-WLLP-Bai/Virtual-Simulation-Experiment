@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface User {
-  id: string;
+  id: number;
   username: string;
   name: string;
   role: "student" | "teacher" | "admin";
@@ -12,26 +12,23 @@ interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  loading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
-// 模拟登录
-const mockLogin = async (username: string, password: string): Promise<{ user: User; token: string }> => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  if (username === "admin" && password === "admin123") {
-    return {
-      user: { id: "1", username: "admin", name: "管理员", role: "admin" },
-      token: "mock-token-" + Date.now(),
-    };
+// API 登录
+const apiLogin = async (username: string, password: string): Promise<{ user: User; token: string }> => {
+  const res = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password }),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || "登录失败");
   }
-  if (username === "student" && password === "123456") {
-    return {
-      user: { id: "2", username: "student", name: "学生", role: "student" },
-      token: "mock-token-" + Date.now(),
-    };
-  }
-  throw new Error("用户名或密码错误");
+  return res.json();
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -40,9 +37,16 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
+      loading: false,
       login: async (username: string, password: string) => {
-        const { user, token } = await mockLogin(username, password);
-        set({ user, token, isAuthenticated: true });
+        set({ loading: true });
+        try {
+          const { user, token } = await apiLogin(username, password);
+          set({ user, token, isAuthenticated: true, loading: false });
+        } catch (e) {
+          set({ loading: false });
+          throw e;
+        }
       },
       logout: () => {
         set({ user: null, token: null, isAuthenticated: false });
@@ -50,6 +54,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
+      partialize: (state) => ({ user: state.user, token: state.token, isAuthenticated: state.isAuthenticated }),
     }
   )
 );
