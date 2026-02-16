@@ -1,23 +1,21 @@
-登陆账号：你的学号@tongji.edu.cn
-密码默认：111111
+# bun-react-tailwind-shadcn-template
 
-## 快速开始
+To install dependencies:
 
-git下载地址：https://git-scm.com/download/win
+```bash
+bun install
+```
 
-安装tyarn：npm install yarn tyarn -g
+To start a development server:
 
-clone项目之后，进入到项目的front文件夹，然后运行tyarn命令安装依赖，最后tyarn dev运行项目
+```bash
+bun dev
+```
 
-## 前端规范
+To run for production:
 
-UI库：[AntdV](https://antdv.com/components/overview)
-前端脚手架：[Stepin Template](http://stepui.gitee.io/stepin-template-docs/page.html)
+```bash
+bun start
+```
 
-快照
-
-![1](https://raw.githubusercontent.com/vvvviolet/Virtual-Simulation-Experiment/main/Images/1.png)
-
-![2](https://raw.githubusercontent.com/vvvviolet/Virtual-Simulation-Experiment/main/Images/2.png)
-
-![3](https://raw.githubusercontent.com/vvvviolet/Virtual-Simulation-Experiment/main/Images/4.png)
+This project was created using `bun init` in bun v1.3.8. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.

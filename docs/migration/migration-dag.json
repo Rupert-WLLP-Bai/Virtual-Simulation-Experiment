@@ -1,0 +1,93 @@
+{
+  "version": "1.0",
+  "project": "Virtual-Simulation-Experiment migration to 2026",
+  "nodes": [
+    {"id": "INF-01", "type": "foundation", "owner": "Orchestrator-Agent"},
+    {"id": "INF-02", "type": "foundation", "owner": "UI-Agent"},
+    {"id": "INF-03", "type": "foundation", "owner": "Infra-Agent"},
+    {"id": "INF-04", "type": "foundation", "owner": "Asset-Agent"},
+    {"id": "INF-05", "type": "foundation", "owner": "Calc-Agent"},
+    {"id": "INF-06", "type": "foundation", "owner": "QA-Agent"},
+
+    {"id": "EXP-01", "type": "experiment", "owner": "Stabilize-Agent"},
+    {"id": "EXP-02", "type": "experiment", "owner": "FP-Agent"},
+    {"id": "EXP-03", "type": "experiment", "owner": "DevCost-Agent"},
+    {"id": "EXP-04", "type": "experiment", "owner": "StdCost-Agent"},
+    {"id": "EXP-05", "type": "experiment", "owner": "Investment-Agent"},
+    {"id": "EXP-06", "type": "experiment", "owner": "Risk-Agent"},
+    {"id": "EXP-07", "type": "experiment", "owner": "Finance-Agent"},
+    {"id": "EXP-08", "type": "experiment", "owner": "Benefit-Agent"},
+    {"id": "EXP-09", "type": "experiment", "owner": "EVA-Agent"},
+
+    {"id": "INT-01", "type": "integration", "owner": "Infra-Agent"},
+    {"id": "INT-02", "type": "integration", "owner": "Data-Agent"},
+    {"id": "INT-03", "type": "integration", "owner": "QA-Agent"},
+    {"id": "INT-04", "type": "integration", "owner": "Orchestrator-Agent"}
+  ],
+  "edges": [
+    ["INF-01", "INF-02"],
+    ["INF-01", "INF-03"],
+    ["INF-01", "INF-04"],
+    ["INF-01", "INF-05"],
+    ["INF-02", "INF-06"],
+    ["INF-03", "INF-06"],
+
+    ["INF-02", "EXP-01"],
+    ["INF-03", "EXP-01"],
+    ["INF-04", "EXP-01"],
+
+    ["INF-02", "EXP-02"],
+    ["INF-03", "EXP-02"],
+
+    ["INF-02", "EXP-03"],
+    ["INF-03", "EXP-03"],
+    ["INF-05", "EXP-03"],
+
+    ["INF-02", "EXP-04"],
+    ["INF-03", "EXP-04"],
+
+    ["INF-02", "EXP-05"],
+    ["INF-03", "EXP-05"],
+    ["INF-05", "EXP-05"],
+
+    ["INF-02", "EXP-06"],
+    ["INF-03", "EXP-06"],
+    ["INF-05", "EXP-06"],
+
+    ["INF-02", "EXP-07"],
+    ["INF-03", "EXP-07"],
+    ["INF-05", "EXP-07"],
+
+    ["INF-02", "EXP-08"],
+    ["INF-03", "EXP-08"],
+    ["INF-05", "EXP-08"],
+
+    ["INF-02", "EXP-09"],
+    ["INF-03", "EXP-09"],
+    ["INF-05", "EXP-09"],
+
+    ["EXP-01", "INT-01"],
+    ["EXP-02", "INT-01"],
+    ["EXP-03", "INT-01"],
+    ["EXP-04", "INT-01"],
+    ["EXP-05", "INT-01"],
+    ["EXP-06", "INT-01"],
+    ["EXP-07", "INT-01"],
+    ["EXP-08", "INT-01"],
+    ["EXP-09", "INT-01"],
+
+    ["INT-01", "INT-02"],
+    ["INT-02", "INT-03"],
+    ["INF-06", "INT-03"],
+    ["INT-03", "INT-04"]
+  ],
+  "topological_waves": [
+    ["INF-01"],
+    ["INF-02", "INF-03", "INF-04", "INF-05"],
+    ["INF-06", "EXP-01", "EXP-02", "EXP-03", "EXP-04", "EXP-05", "EXP-06", "EXP-07", "EXP-08", "EXP-09"],
+    ["INT-01"],
+    ["INT-02"],
+    ["INT-03"],
+    ["INT-04"]
+  ]
+}
