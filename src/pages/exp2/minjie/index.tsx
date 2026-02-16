@@ -1,56 +1,60 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { ExportPDF } from "@/components/ui/export-pdf";
+import { FormulaBlock } from "@/components/ui/formula";
+import { StatisticCard } from "@/components/ui/statistic-card";
 
 export default function MinjiePage() {
-  const [notes, setNotes] = useState("");
+  const [storyPoints, setStoryPoints] = useState(180);
+  const [velocity, setVelocity] = useState(30);
+  const [teamSize, setTeamSize] = useState(6);
+  const [costPerPersonSprint, setCostPerPersonSprint] = useState(12000);
+
+  const sprints = useMemo(() => (velocity > 0 ? storyPoints / velocity : 0), [storyPoints, velocity]);
+  const totalCost = useMemo(() => sprints * teamSize * costPerPersonSprint, [sprints, teamSize, costPerPersonSprint]);
 
   return (
     <div className="p-6 bg-white rounded-lg shadow" id="experiment-content">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">敏捷方法软件规模估算</h1>
-
-        {/* 实验目的 */}
-        <div className="border border-gray-200 rounded-lg p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800">一、实验目的</h2>
-          <p className="text-gray-600">
-            理解敏捷开发方法下的软件规模估算原理，掌握基于用户故事点的估算方法。
-          </p>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">敏捷方法规模估算</h1>
+          <ExportPDF targetId="experiment-content" filename="敏捷规模估算.pdf" />
         </div>
 
-        {/* 实验原理 */}
         <div className="border border-gray-200 rounded-lg p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800">二、实验原理</h2>
-          <p className="text-gray-600 mb-4">
-            敏捷方法使用"故事点"作为规模单位，而不是传统的功能点。故事点反映的是工作的相对复杂度。
-          </p>
-          <h3 className="font-medium text-gray-700 mb-2">常用估算技术：</h3>
-          <ul className="list-disc list-inside text-gray-600 space-y-1">
-            <li><strong>规划扑克</strong> - 团队共识估算</li>
-            <li><strong>T-Shirt sizing</strong> - S/M/L/XL分类</li>
-            <li><strong>亲和估算</strong> - 分类排序法</li>
-          </ul>
-        </div>
-
-        {/* 实验步骤 */}
-        <div className="border border-gray-200 rounded-lg p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800">三、实验步骤</h2>
-          <ol className="list-decimal list-inside text-gray-600 space-y-2">
-            <li>拆分用户故事为可估算的任务</li>
-            <li>使用规划扑克进行团队估算</li>
-            <li>讨论并达成共识</li>
-            <li>计算故事点总数</li>
-            <li>根据速率计算迭代周期</li>
-          </ol>
-        </div>
-
-        {/* 实验心得 */}
-        <div className="border border-gray-200 rounded-lg p-6">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800">四、实验心得</h2>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="写下你的心得"
-            className="exp-input w-full h-32 p-3 resize-none"
+          <FormulaBlock
+            formulas={[
+              { label: "迭代数", formula: String.raw`SprintCount=\frac{StoryPoints}{Velocity}` },
+              { label: "总成本", formula: String.raw`Cost=SprintCount\times TeamSize\times Cost_{person,sprint}` },
+            ]}
           />
+        </div>
+
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">参数输入</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">总故事点</label>
+              <input type="number" value={storyPoints} onChange={(e) => setStoryPoints(Number(e.target.value))} className="w-full px-3 py-2 exp-input" />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">团队速度（点/迭代）</label>
+              <input type="number" value={velocity} onChange={(e) => setVelocity(Number(e.target.value))} className="w-full px-3 py-2 exp-input" />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">团队人数</label>
+              <input type="number" value={teamSize} onChange={(e) => setTeamSize(Number(e.target.value))} className="w-full px-3 py-2 exp-input" />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">人均每迭代成本（元）</label>
+              <input type="number" value={costPerPersonSprint} onChange={(e) => setCostPerPersonSprint(Number(e.target.value))} className="w-full px-3 py-2 exp-input" />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <StatisticCard title="预计迭代数" value={sprints.toFixed(2)} className="border border-gray-200 rounded-lg p-6" />
+          <StatisticCard title="预计总成本" value={totalCost.toFixed(2)} prefix="¥" valueColor="text-green-600" className="border border-gray-200 rounded-lg p-6" />
+          <StatisticCard title="说明" value={`${storyPoints}/${velocity}`} className="border border-gray-200 rounded-lg p-6" />
         </div>
       </div>
     </div>

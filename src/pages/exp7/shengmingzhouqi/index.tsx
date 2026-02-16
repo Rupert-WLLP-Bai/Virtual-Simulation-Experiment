@@ -45,45 +45,44 @@ export default function ShengmingzhouqiPage() {
     return 1 / Math.pow(1 + i, n);
   };
 
+  // 计算资金回收系数 A/P,i,n
+  const calculateAP = (i: number, n: number): number => {
+    const pa = calculatePA(i, n);
+    return pa > 0 ? 1 / pa : 0;
+  };
+
   const calculatedData = useMemo(() => {
     const P = 10000; // 初始投资
+    let cumulativePwOm = 0;
+
     const results = tableData.map((row) => {
       const n = row.year;
       const F = parseFloat(row.salvageValue) || 0;
       const OM = parseFloat(row.omCost) || 0;
 
       // 资本回收 CR(i) = (P - F) * (A/P,i,n) + F * i
-      // 其中 (A/P,i,n) = 1 / (P/A,i,n)
-      const PA = calculatePA(rate, n);
-      const AP = PA > 0 ? 1 / PA : 0;
+      const AP = calculateAP(rate, n);
       const cr = (P - F) * AP + F * rate;
 
-      // 运维费用现值 PW(i) of O&M
-      const pf = calculatePF(rate, n);
-      const pwOm = OM * pf;
+      // 第 n 年运维费用折现至 0 年
+      const pwOmYearN = OM * calculatePF(rate, n);
+      cumulativePwOm += pwOmYearN;
 
-      return { cr, pwOm, PA };
-    });
-
-    // 计算累计运维费用和AE
-    let sumOm = 0;
-    const updatedData = results.map((result, index) => {
-      sumOm += result.pwOm;
-      const PA = calculatePA(rate, tableData[index].year);
-      const aeOm = PA > 0 ? sumOm / PA : 0;
-      const totalAe = result.cr + aeOm;
+      // n 年累计运维现值折算为年等值
+      const aeOm = cumulativePwOm * AP;
+      const totalAe = cr + aeOm;
 
       return {
-        ...tableData[index],
-        cr: isNaN(result.cr) ? "" : result.cr.toFixed(0),
-        pwOm: isNaN(result.pwOm) ? "" : result.pwOm.toFixed(0),
-        sumOm: sumOm.toFixed(0),
+        ...row,
+        cr: isNaN(cr) ? "" : cr.toFixed(0),
+        pwOm: isNaN(pwOmYearN) ? "" : pwOmYearN.toFixed(0),
+        sumOm: cumulativePwOm.toFixed(0),
         aeOm: isNaN(aeOm) ? "" : aeOm.toFixed(0),
         totalAe: isNaN(totalAe) ? "" : totalAe.toFixed(0),
       };
     });
 
-    return updatedData;
+    return results;
   }, [tableData, rate]);
 
   const minTotalAe = useMemo(() => {
@@ -170,7 +169,8 @@ export default function ShengmingzhouqiPage() {
           <FormulaBlock
             formulas={[
               { label: "资本回收 CR(i)", formula: String.raw`CR(i) = (P - F) \times (A/P,i,n) + F \times i` },
-              { label: "复利现值系数 P/F", formula: "P/F = 1 / (1 + i)^n" },
+              { label: "运维年等值成本", formula: String.raw`AE_{OM}(n)=PW_{OM}(n)\times(A/P,i,n)` },
+              { label: "复利现值系数 P/F", formula: String.raw`P/F = \frac{1}{(1+i)^n}` },
               { label: "总经济成本", formula: "Total AE(i) = CR(i) + AE(i) of O&M" },
             ]}
           />

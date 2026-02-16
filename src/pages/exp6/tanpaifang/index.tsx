@@ -67,8 +67,14 @@ export default function TanpaifangPage() {
     <div className="p-6 bg-white rounded-lg shadow" id="experiment-content">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">碳排放权交易 (Vickrey 拍卖)</h1>
+          <h1 className="text-2xl font-bold text-gray-800">碳排放权交易（统一出清价）</h1>
           <ExportPDF targetId="experiment-content" filename="碳排放权交易.pdf" />
+        </div>
+
+        <div className="border border-gray-200 rounded-lg p-4 mb-6 bg-gray-50">
+          <p className="text-sm text-gray-600">
+            按“买价高于卖价即可成交”的双边撮合规则计算成交量，并采用统一出清价对所有成交方结算。
+          </p>
         </div>
 
         {/* 卖方配置 */}

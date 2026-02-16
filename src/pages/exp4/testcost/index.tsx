@@ -204,7 +204,7 @@ export default function TestcostPage() {
           </div>
 
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-700 break-all">
+            <p className="text-gray-700 break-words">
               <strong>计算结果：</strong>UW = {TW} + {TW} × 10% + {TW} × 20% = <span className="font-bold text-gray-900">{UW.toFixed(2)}</span> 人日
             </p>
           </div>
@@ -220,7 +220,7 @@ export default function TestcostPage() {
           />
 
           <div className="overflow-x-auto">
-            <table className="w-full mb-4">
+            <table className="w-full min-w-[760px] mb-4">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">调整因子</th>
@@ -362,7 +362,7 @@ export default function TestcostPage() {
           </div>
 
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-700 break-all">
+            <p className="text-gray-700 break-words">
               <strong>计算结果：</strong>DF = {adjustmentFactors.C} × {adjustmentFactors.I} × {adjustmentFactors.R} × {adjustmentFactors.U} × {adjustmentFactors.X} × {adjustmentFactors.A} × (1 + {adjustmentFactors.n} × {adjustmentFactors.Tr}) = <span className="font-bold text-gray-900">{DF.toFixed(4)}</span>
             </p>
           </div>
@@ -415,7 +415,7 @@ export default function TestcostPage() {
           </div>
 
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-700 break-all">
+            <p className="text-gray-700 break-words">
               <strong>计算结果：</strong>LC = {UW.toFixed(2)} × {DF.toFixed(4)} × {S} = <span className="font-bold text-gray-900">¥{LC.toFixed(2)}</span>
             </p>
           </div>
@@ -555,7 +555,7 @@ export default function TestcostPage() {
           </div>
 
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-700 break-all">
+            <p className="text-gray-700 break-words">
               <strong>计算结果：</strong>IC = OT + RT = {OT.toFixed(2)} + {RT.toFixed(2)} = <span className="font-bold text-gray-900">¥{IC.toFixed(2)}</span>
             </p>
           </div>
@@ -608,7 +608,7 @@ export default function TestcostPage() {
           </div>
 
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-700 break-all">
+            <p className="text-gray-700 break-words">
               <strong>计算结果：</strong>DC = {LC.toFixed(2)} + {EC} + {IC.toFixed(2)} = <span className="font-bold text-gray-900">¥{DC.toFixed(2)}</span>
             </p>
           </div>
@@ -650,7 +650,7 @@ export default function TestcostPage() {
           </div>
 
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-700 break-all">
+            <p className="text-gray-700 break-words">
               <strong>计算结果：</strong>STC = {DC.toFixed(2)} + {IDC} = <span className="font-bold text-gray-900">¥{STC.toFixed(2)}</span>
             </p>
           </div>

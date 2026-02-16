@@ -24,79 +24,113 @@ export interface CarbonResult {
  * 运行 Vickrey 拍卖
  */
 export function carbonAuction(experiment: CarbonExperiment): CarbonResult {
-  // 卖方：按价格升序排列
-  const sellers = [...experiment.sellerPrices].sort((a, b) => a.price - b.price);
-  let cumSellerQty = 0;
+  // 卖方报价（升序）与买方报价（降序）
+  const sellers = [...experiment.sellerPrices]
+    .map((s) => ({ ...s, quantity: Math.max(0, s.quantity), price: Math.max(0, s.price) }))
+    .sort((a, b) => a.price - b.price);
+  const buyers = [...experiment.buyerPrices]
+    .map((b) => ({ ...b, quantity: Math.max(0, b.quantity), price: Math.max(0, b.price) }))
+    .sort((a, b) => b.price - a.price);
+
   const supplyCurve: { price: number; cumQuantity: number }[] = [];
+  const demandCurve: { price: number; cumQuantity: number }[] = [];
+  let cumSellerQty = 0;
+  let cumBuyerQty = 0;
+
   sellers.forEach((s) => {
     cumSellerQty += s.quantity;
     supplyCurve.push({ price: s.price, cumQuantity: cumSellerQty });
   });
-
-  // 买方：按价格降序排列
-  const buyers = [...experiment.buyerPrices].sort((a, b) => b.price - a.price);
-  let cumBuyerQty = 0;
-  const demandCurve: { price: number; cumQuantity: number }[] = [];
   buyers.forEach((b) => {
     cumBuyerQty += b.quantity;
     demandCurve.push({ price: b.price, cumQuantity: cumBuyerQty });
   });
 
-  // 找均衡点：供给曲线和需求曲线的交点
-  let equilibriumPrice = 0;
-  let equilibriumQuantity = 0;
+  type Match = { sellerId: string; buyerId: string; quantity: number };
+  const matches: Match[] = [];
+  let i = 0;
+  let j = 0;
+  let totalMatchedQuantity = 0;
+  let marginalSellerPrice = 0;
+  let marginalBuyerPrice = 0;
 
-  for (let i = 0; i < Math.min(supplyCurve.length, demandCurve.length); i++) {
-    if (supplyCurve[i]!.cumQuantity <= demandCurve[i]!.cumQuantity) {
-      equilibriumQuantity = supplyCurve[i]!.cumQuantity;
-      // 均衡价格：最后一个匹配的价格
-      equilibriumPrice = Math.min(supplyCurve[i]!.price, demandCurve[i]!.price);
+  // 按价格优先进行双边撮合：只在 buy >= sell 时成交
+  while (i < sellers.length && j < buyers.length) {
+    const seller = sellers[i]!;
+    const buyer = buyers[j]!;
+
+    if (buyer.price < seller.price) {
+      break;
     }
+
+    const quantity = Math.min(seller.quantity, buyer.quantity);
+    if (quantity <= 0) {
+      if (seller.quantity <= 0) i++;
+      if (buyer.quantity <= 0) j++;
+      continue;
+    }
+
+    matches.push({
+      sellerId: seller.id,
+      buyerId: buyer.id,
+      quantity,
+    });
+
+    totalMatchedQuantity += quantity;
+    marginalSellerPrice = seller.price;
+    marginalBuyerPrice = buyer.price;
+
+    seller.quantity -= quantity;
+    buyer.quantity -= quantity;
+
+    if (seller.quantity <= 0) i++;
+    if (buyer.quantity <= 0) j++;
   }
 
-  // 计算卖方结果
-  const sellerResults: CarbonResult["sellerResults"] = [];
-  let allocatedQty = 0;
-  sellers.forEach((s) => {
-    const allocated = Math.min(s.quantity, Math.max(0, equilibriumQuantity - allocatedQty));
-    if (allocated > 0) {
-      // 卖方获得第二低价格
-      const winningPrice = sellers.find((sp) => sp.price > s.price)?.price || s.price;
-      sellerResults.push({
+  const equilibriumQuantity = totalMatchedQuantity;
+  const equilibriumPrice =
+    equilibriumQuantity > 0
+      ? Math.round(((marginalSellerPrice + marginalBuyerPrice) / 2) * 100) / 100
+      : 0;
+
+  const sellerMap = new Map<string, number>();
+  const buyerMap = new Map<string, number>();
+  matches.forEach((m) => {
+    sellerMap.set(m.sellerId, (sellerMap.get(m.sellerId) || 0) + m.quantity);
+    buyerMap.set(m.buyerId, (buyerMap.get(m.buyerId) || 0) + m.quantity);
+  });
+
+  const sellerResults: CarbonResult["sellerResults"] = experiment.sellerPrices
+    .filter((s) => (sellerMap.get(s.id) || 0) > 0)
+    .map((s) => {
+      const quantity = sellerMap.get(s.id) || 0;
+      return {
         id: s.id,
-        quantity: allocated,
-        price: winningPrice,
-        revenue: allocated * winningPrice,
-      });
-      allocatedQty += allocated;
-    }
-  });
+        quantity,
+        price: equilibriumPrice,
+        revenue: Math.round(quantity * equilibriumPrice * 100) / 100,
+      };
+    });
 
-  // 计算买方结果
-  const buyerResults: CarbonResult["buyerResults"] = [];
-  allocatedQty = 0;
-  buyers.forEach((b) => {
-    const allocated = Math.min(b.quantity, Math.max(0, equilibriumQuantity - allocatedQty));
-    if (allocated > 0) {
-      // 买方支付第二高价格
-      const winningPrice = buyers.find((bp) => bp.price < b.price)?.price || b.price;
-      buyerResults.push({
+  const buyerResults: CarbonResult["buyerResults"] = experiment.buyerPrices
+    .filter((b) => (buyerMap.get(b.id) || 0) > 0)
+    .map((b) => {
+      const quantity = buyerMap.get(b.id) || 0;
+      return {
         id: b.id,
-        quantity: allocated,
-        price: winningPrice,
-        cost: allocated * winningPrice,
-      });
-      allocatedQty += allocated;
-    }
-  });
+        quantity,
+        price: equilibriumPrice,
+        cost: Math.round(quantity * equilibriumPrice * 100) / 100,
+      };
+    });
 
-  const totalTransaction = sellerResults.reduce((sum, r) => sum + r.revenue, 0);
+  const totalTransaction = Math.round(equilibriumQuantity * equilibriumPrice * 100) / 100;
 
   return {
     equilibriumPrice,
     equilibriumQuantity,
     transactionVolume: equilibriumQuantity,
-    totalTransaction: Math.round(totalTransaction * 100) / 100,
+    totalTransaction,
     sellerResults,
     buyerResults,
     supplyCurve,

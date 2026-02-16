@@ -20,6 +20,8 @@ export interface StatisticCardProps {
   icon?: React.ReactNode;
   /** 数值颜色 */
   valueColor?: string;
+  /** 数值颜色类名（如 text-green-600） */
+  valueClassName?: string;
   /** 类名 */
   className?: string;
 }
@@ -34,8 +36,16 @@ export function StatisticCard({
   trendValue,
   icon,
   valueColor,
+  valueClassName,
   className,
 }: StatisticCardProps) {
+  const valueColorStyle =
+    valueColor && /^(#|rgb|hsl|var\()/i.test(valueColor)
+      ? { color: valueColor }
+      : undefined;
+  const valueColorClass =
+    valueColor && !valueColorStyle ? valueColor : "";
+
   const getTrendColor = () => {
     switch (trend) {
       case "up":
@@ -72,8 +82,12 @@ export function StatisticCard({
             <span className="text-lg text-gray-500 shrink-0">{prefix}</span>
           )}
           <span
-            className="text-2xl md:text-3xl font-bold leading-tight min-w-0 break-all"
-            style={valueColor ? { color: valueColor } : undefined}
+            className={cn(
+              "text-2xl md:text-3xl font-bold leading-tight min-w-0 break-all",
+              valueColorClass,
+              valueClassName
+            )}
+            style={valueColorStyle}
           >
             {typeof value === "number"
               ? value.toLocaleString()

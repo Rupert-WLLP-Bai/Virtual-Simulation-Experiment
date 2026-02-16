@@ -9,6 +9,7 @@
 - `docs/migration/06-review-gate.md`：Review 通过门禁（阻断项、证据要求、Pass/Fail标准）。
 - `docs/migration/07-branch-feature-matrix.md`：旧仓库全分支功能迁移详细对照表（分支级+实验级+子agent分配）。
 - `docs/migration/08-full-migration-team-prompt.md`：基于 team-v5 的“全量迁移执行 Prompt”（可直接投喂 agent team）。
+- `docs/migration/09-reference-verification-remediation.md`：联网参考资料对照后的正确性修复清单（P1/P2、并行编排、验收样例）。
 - `docs/migration/migration-dag.json`：机器可读 DAG（便于调度器直接消费）。
 
 ## 迁移范围基准

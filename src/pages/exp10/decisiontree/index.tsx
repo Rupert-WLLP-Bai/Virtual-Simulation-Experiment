@@ -102,6 +102,13 @@ export default function DecisionTreePage() {
   };
 
   const nodes = useMemo(() => extractNodes(decisionTree), [decisionTree]);
+  const chanceProbabilitySum = useMemo(
+    () =>
+      nodes
+        .filter((n) => n.type === "chance")
+        .reduce((sum, n) => sum + (typeof n.probability === "number" ? n.probability : 0), 0),
+    [nodes]
+  );
 
   const chartData = useMemo(() => {
     const data: { name: string; value: number }[] = [];
@@ -144,6 +151,9 @@ export default function DecisionTreePage() {
               />
             </div>
           </div>
+          <p className="mt-3 text-sm text-gray-500">
+            情景概率和：{chanceProbabilitySum.toFixed(2)}（若不等于 1，系统会按比例归一化后计算 ENPV）
+          </p>
         </div>
 
         {/* 节点配置 */}
@@ -214,8 +224,7 @@ export default function DecisionTreePage() {
           />
           <StatisticCard
             title="建议"
-            value={result.recommendation === "可行" ? 1 : 0}
-            suffix={result.recommendation}
+            value={result.recommendation}
             valueColor={result.recommendation === "可行" ? "text-green-600" : "text-red-600"}
             className="border border-gray-200 rounded-lg p-6"
           />

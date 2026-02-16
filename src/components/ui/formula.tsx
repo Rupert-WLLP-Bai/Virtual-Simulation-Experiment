@@ -30,8 +30,14 @@ export function Formula({
     if (containerRef.current) {
       try {
         setHasRenderError(false);
-        // 自动将 * 转换为 \times 以正确显示乘号
-        const processedFormula = formula.replace(/\s*\*\s*/g, " \\times ");
+        // 统一将常见乘号写法转换为 KaTeX 可识别形式
+        const processedFormula = formula
+          // 1) 星号乘法：a*b -> a \times b
+          .replace(/\s*\*\s*/g, " \\times ")
+          // 2) Unicode 乘号：× -> \times
+          .replace(/×/g, "\\times")
+          // 3) 文本 times：仅替换未转义的 times，避免把 \times 变成 \\times
+          .replace(/(?<!\\)times/g, "\\times");
         katex.render(processedFormula, containerRef.current, {
           displayMode,
           throwOnError,
@@ -54,7 +60,7 @@ export function Formula({
           className
         )}
       >
-        <code className="text-sm text-red-600 break-all">{formula}</code>
+        <code className="text-sm text-red-600 whitespace-nowrap">{formula}</code>
       </div>
     );
   }
