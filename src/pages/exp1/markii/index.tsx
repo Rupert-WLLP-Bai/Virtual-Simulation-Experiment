@@ -38,20 +38,20 @@ export default function MarkiiPage() {
   }, [result]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6" id="experiment-content">
+    <div className="p-6 bg-white rounded-lg shadow" id="experiment-content">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">MARK II 功能点度量</h1>
+          <h1 className="text-2xl font-bold text-gray-800">MARK II 功能点度量</h1>
           <ExportPDF targetId="experiment-content" filename="MARKII功能点度量.pdf" />
         </div>
 
         {/* 输入参数 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">功能项配置</h2>
+            <h2 className="text-lg font-semibold text-gray-800">功能项配置</h2>
             <button
               onClick={addEntity}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-800/80 transition-colors"
             >
               添加功能项
             </button>
@@ -70,13 +70,13 @@ export default function MarkiiPage() {
               </thead>
               <tbody>
                 {entities.map((entity) => (
-                  <tr key={entity.id} className="border-t">
+                  <tr key={entity.id} className="border-t border-gray-200">
                     <td className="px-4 py-2">
                       <input
                         type="text"
                         value={entity.name}
                         onChange={(e) => updateEntity(entity.id, { name: e.target.value })}
-                        className="w-full px-3 py-2 border rounded-lg"
+                        className="w-full px-3 py-2 exp-input"
                       />
                     </td>
                     <td className="px-4 py-2">
@@ -85,7 +85,7 @@ export default function MarkiiPage() {
                         onChange={(e) =>
                           updateEntity(entity.id, { type: e.target.value as MarkIIEntity["type"] })
                         }
-                        className="w-full px-3 py-2 border rounded-lg"
+                        className="w-full px-3 py-2 exp-select"
                       >
                         <option value="ILF">ILF (内部逻辑文件)</option>
                         <option value="EIF">EIF (外部接口文件)</option>
@@ -100,7 +100,7 @@ export default function MarkiiPage() {
                         onChange={(e) =>
                           updateEntity(entity.id, { complexity: e.target.value as MarkIIEntity["complexity"] })
                         }
-                        className="w-full px-3 py-2 border rounded-lg"
+                        className="w-full px-3 py-2 exp-select"
                       >
                         <option value="low">低</option>
                         <option value="medium">中</option>
@@ -113,7 +113,7 @@ export default function MarkiiPage() {
                         min={1}
                         value={entity.ret}
                         onChange={(e) => updateEntity(entity.id, { ret: Number(e.target.value) })}
-                        className="w-20 px-3 py-2 border rounded-lg"
+                        className="w-20 px-3 py-2 exp-input"
                       />
                     </td>
                     <td className="px-4 py-2">
@@ -122,7 +122,7 @@ export default function MarkiiPage() {
                         min={1}
                         value={entity.det}
                         onChange={(e) => updateEntity(entity.id, { det: Number(e.target.value) })}
-                        className="w-20 px-3 py-2 border rounded-lg"
+                        className="w-20 px-3 py-2 exp-input"
                       />
                     </td>
                     <td className="px-4 py-2 text-center">
@@ -142,18 +142,20 @@ export default function MarkiiPage() {
           <StatisticCard
             title="未调整功能点"
             value={result.unadjustedFP}
-            valueColor="text-blue-600"
+            valueColor="text-gray-800"
+            className="border border-gray-200 rounded-lg p-6"
           />
           <StatisticCard
             title="总功能点"
             value={result.totalFP}
             valueColor="text-green-600"
+            className="border border-gray-200 rounded-lg p-6"
           />
         </div>
 
         {/* 详细结果 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4">详细计算</h2>
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">详细计算</h2>
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
@@ -165,11 +167,11 @@ export default function MarkiiPage() {
             </thead>
             <tbody>
               {result.details.map((detail, index) => (
-                <tr key={index} className="border-t">
-                  <td className="px-4 py-2">{detail.type}</td>
-                  <td className="px-4 py-2">{detail.count}</td>
-                  <td className="px-4 py-2">{detail.weight}</td>
-                  <td className="px-4 py-2">{detail.fp}</td>
+                <tr key={index} className="border-t border-gray-200">
+                  <td className="px-4 py-2 text-gray-800">{detail.type}</td>
+                  <td className="px-4 py-2 text-gray-800">{detail.count}</td>
+                  <td className="px-4 py-2 text-gray-800">{detail.weight}</td>
+                  <td className="px-4 py-2 text-gray-800">{detail.fp}</td>
                 </tr>
               ))}
             </tbody>
@@ -177,8 +179,8 @@ export default function MarkiiPage() {
         </div>
 
         {/* 图表 */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-4">功能类型分布</h2>
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">功能类型分布</h2>
           <LineChart
             title=""
             xAxisData={chartData.map((d) => d.name)}

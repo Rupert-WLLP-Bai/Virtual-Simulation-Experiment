@@ -26,16 +26,16 @@ export default function YinkuipinghengPage() {
   }, [input]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6" id="experiment-content">
+    <div className="p-6 bg-white rounded-lg shadow" id="experiment-content">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">盈亏平衡分析</h1>
+          <h1 className="text-2xl font-bold text-gray-800">盈亏平衡分析</h1>
           <ExportPDF targetId="experiment-content" filename="盈亏平衡分析.pdf" />
         </div>
 
         {/* 输入参数 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4">参数设置</h2>
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">参数设置</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">固定成本</label>
@@ -43,7 +43,7 @@ export default function YinkuipinghengPage() {
                 type="number"
                 value={input.fixedCost}
                 onChange={(e) => setInput({ ...input, fixedCost: Number(e.target.value) })}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 exp-input"
               />
             </div>
             <div>
@@ -52,7 +52,7 @@ export default function YinkuipinghengPage() {
                 type="number"
                 value={input.variableCost}
                 onChange={(e) => setInput({ ...input, variableCost: Number(e.target.value) })}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 exp-input"
               />
             </div>
             <div>
@@ -61,7 +61,7 @@ export default function YinkuipinghengPage() {
                 type="number"
                 value={input.unitPrice}
                 onChange={(e) => setInput({ ...input, unitPrice: Number(e.target.value) })}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 exp-input"
               />
             </div>
             <div>
@@ -70,7 +70,7 @@ export default function YinkuipinghengPage() {
                 type="number"
                 value={input.normalSales}
                 onChange={(e) => setInput({ ...input, normalSales: Number(e.target.value) })}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 exp-input"
               />
             </div>
           </div>
@@ -83,12 +83,14 @@ export default function YinkuipinghengPage() {
             value={result.breakevenQuantity}
             suffix="件"
             valueColor={status === "profit" ? "text-green-600" : "text-red-600"}
+            className="border border-gray-200 rounded-lg p-6"
           />
           <StatisticCard
             title="盈亏平衡销售额"
             value={result.breakevenSales}
             prefix="¥"
             valueColor={status === "profit" ? "text-green-600" : "text-red-600"}
+            className="border border-gray-200 rounded-lg p-6"
           />
           <StatisticCard
             title="安全边际"
@@ -96,18 +98,20 @@ export default function YinkuipinghengPage() {
             suffix="件"
             trend={status === "profit" ? "up" : "down"}
             trendValue={`${result.safetyMarginRate}%`}
+            className="border border-gray-200 rounded-lg p-6"
           />
           <StatisticCard
             title="边际贡献率"
             value={result.contributionMarginRate}
             suffix="%"
-            valueColor="text-blue-600"
+            valueColor="text-gray-800"
+            className="border border-gray-200 rounded-lg p-6"
           />
         </div>
 
         {/* 图表 */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-4">盈亏平衡图</h2>
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">盈亏平衡图</h2>
           <LineChart
             title=""
             xAxisData={chartData.map((d) => d.name)}

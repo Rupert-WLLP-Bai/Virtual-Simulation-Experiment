@@ -55,16 +55,16 @@ export default function MinganxingPage() {
   }, [results]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6" id="experiment-content">
+    <div className="p-6 bg-white rounded-lg shadow" id="experiment-content">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">敏感性分析</h1>
+          <h1 className="text-2xl font-bold text-gray-800">敏感性分析</h1>
           <ExportPDF targetId="experiment-content" filename="敏感性分析.pdf" />
         </div>
 
         {/* 输入参数 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4">敏感性因素配置</h2>
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">敏感性因素配置</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">折现率 (%)</label>
@@ -72,7 +72,7 @@ export default function MinganxingPage() {
                 type="number"
                 value={rate}
                 onChange={(e) => setRate(Number(e.target.value))}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 exp-input"
               />
             </div>
           </div>
@@ -86,13 +86,13 @@ export default function MinganxingPage() {
             </thead>
             <tbody>
               {factors.map((factor, index) => (
-                <tr key={index} className="border-t">
+                <tr key={index} className="border-t border-gray-200">
                   <td className="px-4 py-2">
                     <input
                       type="text"
                       value={factor.name}
                       onChange={(e) => updateFactor(index, { name: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg"
+                      className="w-full px-3 py-2 exp-input"
                     />
                   </td>
                   <td className="px-4 py-2">
@@ -100,7 +100,7 @@ export default function MinganxingPage() {
                       type="number"
                       value={factor.baseValue}
                       onChange={(e) => updateFactor(index, { baseValue: Number(e.target.value) })}
-                      className="w-full px-3 py-2 border rounded-lg"
+                      className="w-full px-3 py-2 exp-input"
                     />
                   </td>
                   <td className="px-4 py-2">
@@ -113,7 +113,7 @@ export default function MinganxingPage() {
                           updateFactor(index, { changes });
                         }
                       }}
-                      className="w-full px-3 py-2 border rounded-lg"
+                      className="w-full px-3 py-2 exp-input"
                     />
                   </td>
                 </tr>
@@ -129,20 +129,22 @@ export default function MinganxingPage() {
             value={baseNPV}
             prefix="¥"
             valueColor={baseNPV >= 0 ? "text-green-600" : "text-red-600"}
+            className="border border-gray-200 rounded-lg p-6"
           />
           {results.slice(0, 3).map((result, index) => (
             <StatisticCard
               key={index}
               title={`${result.factor} 敏感性系数`}
               value={result.coefficient}
-              valueColor="text-blue-600"
+              valueColor="text-gray-800"
+              className="border border-gray-200 rounded-lg p-6"
             />
           ))}
         </div>
 
         {/* 敏感性分析详情 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4">敏感性排序</h2>
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">敏感性排序</h2>
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
@@ -155,19 +157,19 @@ export default function MinganxingPage() {
             </thead>
             <tbody>
               {results.map((result, index) => (
-                <tr key={index} className="border-t">
-                  <td className="px-4 py-2">{index + 1}</td>
-                  <td className="px-4 py-2">{result.factor}</td>
-                  <td className="px-4 py-2">{result.baseValue}</td>
-                  <td className="px-4 py-2">{result.coefficient.toFixed(2)}</td>
+                <tr key={index} className="border-t border-gray-200">
+                  <td className="px-4 py-2 text-gray-800">{index + 1}</td>
+                  <td className="px-4 py-2 text-gray-800">{result.factor}</td>
+                  <td className="px-4 py-2 text-gray-800">{result.baseValue}</td>
+                  <td className="px-4 py-2 text-gray-800">{result.coefficient.toFixed(2)}</td>
                   <td className="px-4 py-2">
                     <span
                       className={`px-2 py-1 rounded text-sm ${
                         result.coefficient > 1
-                          ? "bg-red-100 text-red-800"
+                          ? "bg-red-100 text-red-700"
                           : result.coefficient > 0.5
                           ? "bg-yellow-100 text-yellow-800"
-                          : "bg-green-100 text-green-800"
+                          : "bg-green-100 text-green-700"
                       }`}
                     >
                       {result.coefficient > 1 ? "高敏感" : result.coefficient > 0.5 ? "中敏感" : "低敏感"}
@@ -180,8 +182,8 @@ export default function MinganxingPage() {
         </div>
 
         {/* 图表 */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-4">敏感性分析图（最敏感因素）</h2>
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">敏感性分析图（最敏感因素）</h2>
           {results.length > 0 && (
             <LineChart
               title=""

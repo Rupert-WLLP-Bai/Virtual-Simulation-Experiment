@@ -72,11 +72,21 @@ if (userCount.count === 0) {
     (1, '单方案财务评价', 'singlescheme', '单方案投资评价', 3),
     (2, 'NPV/IRR评价', 'jinxianzhi', '净现值与内部收益率评价', 1),
     (2, '盈亏平衡分析', 'yinkuipingheng', '盈亏平衡点分析', 2),
+    (2, '动态投资回收期', 'dongtaitouzi', '动态投资回收期计算', 3),
+    (2, '重置期', 'chongzhiqi', '重置期分析', 4),
+    (2, '生命周期', 'shengmingzhouqi', '软件经济生命周期计算', 5),
     (3, '碳排放权交易', 'tanpaifang', 'Vickrey拍卖模拟', 1),
     (4, '敏感性分析', 'minganxing', '敏感性因素分析', 1),
     (4, '不确定性决策', 'buqueding', '不确定环境决策', 2),
     (4, '测试成本估算', 'testcost', '软件测试成本估算', 3),
+    (4, '蒙特卡洛模拟', 'montecarlo', '蒙特卡洛风险模拟', 4),
     (5, '决策树分析', 'decisiontree', '决策树风险分析', 1);
+
+    INSERT OR IGNORE INTO modules (name, description, order_num) VALUES
+    ('测试成本', '软件测试成本估算', 4);
+
+    INSERT OR IGNORE INTO experiments (module_id, name, path, description, order_num) VALUES
+    (4, '蒙特卡洛模拟', 'montecarlo', '蒙特卡洛风险模拟', 4);
 
     INSERT INTO menus (parent_id, name, path, icon, order_num) VALUES
     (NULL, '首页', '/home', 'home', 1),
@@ -85,6 +95,7 @@ if (userCount.count === 0) {
     (2, '投资评价', '/exp7/jinxianzhi', 'trending-up', 2),
     (2, '碳排放交易', '/exp6/tanpaifang', 'leaf', 3),
     (2, '不确定性决策', '/exp9/buqueding', 'help-circle', 4),
+    (2, '蒙特卡洛模拟', '/exp4/montecarlo', 'dice', 5),
     (NULL, '个人中心', '/personal', 'user', 3);
   `);
 }

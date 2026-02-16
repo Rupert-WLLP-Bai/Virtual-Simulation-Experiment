@@ -64,20 +64,20 @@ export default function TanpaifangPage() {
   }, [result]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6" id="experiment-content">
+    <div className="p-6 bg-white rounded-lg shadow" id="experiment-content">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">碳排放权交易 (Vickrey 拍卖)</h1>
+          <h1 className="text-2xl font-bold text-gray-800">碳排放权交易 (Vickrey 拍卖)</h1>
           <ExportPDF targetId="experiment-content" filename="碳排放权交易.pdf" />
         </div>
 
         {/* 卖方配置 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">卖方报价</h2>
+            <h2 className="text-lg font-semibold text-gray-800">卖方报价</h2>
             <button
               onClick={addSeller}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-800/80 transition-colors"
             >
               添加卖方
             </button>
@@ -93,14 +93,14 @@ export default function TanpaifangPage() {
             </thead>
             <tbody>
               {sellerPrices.map((seller) => (
-                <tr key={seller.id} className="border-t">
-                  <td className="px-4 py-2">{seller.id}</td>
+                <tr key={seller.id} className="border-t border-gray-200">
+                  <td className="px-4 py-2 text-gray-800">{seller.id}</td>
                   <td className="px-4 py-2">
                     <input
                       type="number"
                       value={seller.price}
                       onChange={(e) => updateSeller(seller.id, "price", Number(e.target.value))}
-                      className="w-full px-3 py-2 border rounded-lg"
+                      className="w-full px-3 py-2 exp-input"
                     />
                   </td>
                   <td className="px-4 py-2">
@@ -108,7 +108,7 @@ export default function TanpaifangPage() {
                       type="number"
                       value={seller.quantity}
                       onChange={(e) => updateSeller(seller.id, "quantity", Number(e.target.value))}
-                      className="w-full px-3 py-2 border rounded-lg"
+                      className="w-full px-3 py-2 exp-input"
                     />
                   </td>
                   <td className="px-4 py-2 text-center">
@@ -123,12 +123,12 @@ export default function TanpaifangPage() {
         </div>
 
         {/* 买方配置 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">买方报价</h2>
+            <h2 className="text-lg font-semibold text-gray-800">买方报价</h2>
             <button
               onClick={addBuyer}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-800/80 transition-colors"
             >
               添加买方
             </button>
@@ -144,14 +144,14 @@ export default function TanpaifangPage() {
             </thead>
             <tbody>
               {buyerPrices.map((buyer) => (
-                <tr key={buyer.id} className="border-t">
-                  <td className="px-4 py-2">{buyer.id}</td>
+                <tr key={buyer.id} className="border-t border-gray-200">
+                  <td className="px-4 py-2 text-gray-800">{buyer.id}</td>
                   <td className="px-4 py-2">
                     <input
                       type="number"
                       value={buyer.price}
                       onChange={(e) => updateBuyer(buyer.id, "price", Number(e.target.value))}
-                      className="w-full px-3 py-2 border rounded-lg"
+                      className="w-full px-3 py-2 exp-input"
                     />
                   </td>
                   <td className="px-4 py-2">
@@ -159,7 +159,7 @@ export default function TanpaifangPage() {
                       type="number"
                       value={buyer.quantity}
                       onChange={(e) => updateBuyer(buyer.id, "quantity", Number(e.target.value))}
-                      className="w-full px-3 py-2 border rounded-lg"
+                      className="w-full px-3 py-2 exp-input"
                     />
                   </td>
                   <td className="px-4 py-2 text-center">
@@ -175,30 +175,33 @@ export default function TanpaifangPage() {
 
         {/* 统计结果 */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <StatisticCard title="均衡价格" value={result.equilibriumPrice} prefix="¥" valueColor="text-blue-600" />
+          <StatisticCard title="均衡价格" value={result.equilibriumPrice} prefix="¥" valueColor="text-gray-800" className="border border-gray-200 rounded-lg p-6" />
           <StatisticCard
             title="均衡数量"
             value={result.equilibriumQuantity}
             suffix="吨"
             valueColor="text-green-600"
+            className="border border-gray-200 rounded-lg p-6"
           />
           <StatisticCard
             title="成交量"
             value={result.transactionVolume}
             suffix="吨"
             valueColor="text-purple-600"
+            className="border border-gray-200 rounded-lg p-6"
           />
           <StatisticCard
             title="总交易额"
             value={result.totalTransaction}
             prefix="¥"
             valueColor="text-orange-600"
+            className="border border-gray-200 rounded-lg p-6"
           />
         </div>
 
         {/* 卖方结果 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4">卖方成交结果</h2>
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">卖方成交结果</h2>
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
@@ -211,11 +214,11 @@ export default function TanpaifangPage() {
             <tbody>
               {result.sellerResults.length > 0 ? (
                 result.sellerResults.map((r) => (
-                  <tr key={r.id} className="border-t">
-                    <td className="px-4 py-2">{r.id}</td>
-                    <td className="px-4 py-2">{r.quantity}</td>
-                    <td className="px-4 py-2">¥{r.price}</td>
-                    <td className="px-4 py-2">¥{r.revenue}</td>
+                  <tr key={r.id} className="border-t border-gray-200">
+                    <td className="px-4 py-2 text-gray-800">{r.id}</td>
+                    <td className="px-4 py-2 text-gray-800">{r.quantity}</td>
+                    <td className="px-4 py-2 text-gray-800">¥{r.price}</td>
+                    <td className="px-4 py-2 text-gray-800">¥{r.revenue}</td>
                   </tr>
                 ))
               ) : (
@@ -230,8 +233,8 @@ export default function TanpaifangPage() {
         </div>
 
         {/* 买方结果 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4">买方成交结果</h2>
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">买方成交结果</h2>
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
@@ -244,11 +247,11 @@ export default function TanpaifangPage() {
             <tbody>
               {result.buyerResults.length > 0 ? (
                 result.buyerResults.map((r) => (
-                  <tr key={r.id} className="border-t">
-                    <td className="px-4 py-2">{r.id}</td>
-                    <td className="px-4 py-2">{r.quantity}</td>
-                    <td className="px-4 py-2">¥{r.price}</td>
-                    <td className="px-4 py-2">¥{r.cost}</td>
+                  <tr key={r.id} className="border-t border-gray-200">
+                    <td className="px-4 py-2 text-gray-800">{r.id}</td>
+                    <td className="px-4 py-2 text-gray-800">{r.quantity}</td>
+                    <td className="px-4 py-2 text-gray-800">¥{r.price}</td>
+                    <td className="px-4 py-2 text-gray-800">¥{r.cost}</td>
                   </tr>
                 ))
               ) : (
@@ -263,8 +266,8 @@ export default function TanpaifangPage() {
         </div>
 
         {/* 图表 */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-4">供需曲线</h2>
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">供需曲线</h2>
           <LineChart
             title=""
             xAxisData={chartData.supply.map((d) => d.cumQuantity.toString())}

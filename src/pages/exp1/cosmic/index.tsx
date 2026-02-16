@@ -37,20 +37,20 @@ export default function CosmicPage() {
   }, [result]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6" id="experiment-content">
+    <div className="p-6 bg-white rounded-lg shadow" id="experiment-content">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">COSMIC 功能点度量</h1>
+          <h1 className="text-2xl font-bold text-gray-800">COSMIC 功能点度量</h1>
           <ExportPDF targetId="experiment-content" filename="COSMIC功能点度量.pdf" />
         </div>
 
         {/* 输入参数 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">功能项配置</h2>
+            <h2 className="text-lg font-semibold text-gray-800">功能项配置</h2>
             <button
               onClick={addEntry}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
             >
               添加功能项
             </button>
@@ -73,14 +73,14 @@ export default function CosmicPage() {
                         type="text"
                         value={entry.name}
                         onChange={(e) => updateEntry(entry.id, { name: e.target.value })}
-                        className="w-full px-3 py-2 border rounded-lg"
+                        className="w-full px-3 py-2 exp-select"
                       />
                     </td>
                     <td className="px-4 py-2">
                       <select
                         value={entry.type}
                         onChange={(e) => updateEntry(entry.id, { type: e.target.value as CosmicEntry["type"] })}
-                        className="w-full px-3 py-2 border rounded-lg"
+                        className="w-full px-3 py-2 exp-select"
                       >
                         <option value="Entry">Entry (输入)</option>
                         <option value="Exit">Exit (输出)</option>
@@ -98,7 +98,7 @@ export default function CosmicPage() {
                           const newObjects = Array(count).fill("数据项");
                           updateEntry(entry.id, { objects: newObjects });
                         }}
-                        className="w-20 px-3 py-2 border rounded-lg"
+                        className="w-20 px-3 py-2 exp-select"
                       />
                     </td>
                     <td className="px-4 py-2 text-center">
@@ -118,47 +118,21 @@ export default function CosmicPage() {
 
         {/* 统计结果 */}
         <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
-          <StatisticCard
-            title="Entry (输入)"
-            value={result.entry}
-            valueColor="text-blue-600"
-          />
-          <StatisticCard
-            title="Exit (输出)"
-            value={result.exit}
-            valueColor="text-green-600"
-          />
-          <StatisticCard
-            title="Read (读取)"
-            value={result.read}
-            valueColor="text-purple-600"
-          />
-          <StatisticCard
-            title="Write (写入)"
-            value={result.write}
-            valueColor="text-orange-600"
-          />
-          <StatisticCard
-            title="总功能点数"
-            value={result.total}
-            valueColor="text-indigo-600"
-          />
-          <StatisticCard
-            title="CFP"
-            value={result.fp}
-            valueColor="text-teal-600"
-          />
+          <StatisticCard title="Entry (输入)" value={result.entry} valueColor="text-blue-600" />
+          <StatisticCard title="Exit (输出)" value={result.exit} valueColor="text-green-600" />
+          <StatisticCard title="Read (读取)" value={result.read} valueColor="text-purple-600" />
+          <StatisticCard title="Write (写入)" value={result.write} valueColor="text-orange-600" />
+          <StatisticCard title="总功能点数" value={result.total} valueColor="text-indigo-600" />
+          <StatisticCard title="CFP" value={result.fp} valueColor="text-teal-600" />
         </div>
 
         {/* 图表 */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-4">功能类型分布</h2>
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">功能类型分布</h2>
           <LineChart
             title=""
             xAxisData={chartData.map((d) => d.name)}
-            series={[
-              { name: "功能点数量", data: chartData.map((d) => d.value), color: "#6366f1" },
-            ]}
+            series={[{ name: "功能点", data: chartData.map((d) => d.value), color: "#3b82f6" }]}
             height={300}
           />
         </div>

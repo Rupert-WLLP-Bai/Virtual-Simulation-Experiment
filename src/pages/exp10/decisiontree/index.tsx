@@ -123,16 +123,16 @@ export default function DecisionTreePage() {
   }, [decisionTree]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6" id="experiment-content">
+    <div className="p-6 bg-white rounded-lg shadow" id="experiment-content">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">决策树分析</h1>
+          <h1 className="text-2xl font-bold text-gray-800">决策树分析</h1>
           <ExportPDF targetId="experiment-content" filename="决策树分析.pdf" />
         </div>
 
         {/* 参数配置 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4">参数设置</h2>
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">参数设置</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">折现率 (%)</label>
@@ -140,15 +140,15 @@ export default function DecisionTreePage() {
                 type="number"
                 value={discountRate}
                 onChange={(e) => setDiscountRate(Number(e.target.value))}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 exp-input"
               />
             </div>
           </div>
         </div>
 
         {/* 节点配置 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4">决策树节点配置</h2>
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">决策树节点配置</h2>
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
@@ -159,8 +159,8 @@ export default function DecisionTreePage() {
             </thead>
             <tbody>
               {nodes.map((node) => (
-                <tr key={node.id} className="border-t">
-                  <td className="px-4 py-2">{node.name}</td>
+                <tr key={node.id} className="border-t border-gray-200">
+                  <td className="px-4 py-2 text-gray-800">{node.name}</td>
                   <td className="px-4 py-2">
                     <span
                       className={`px-2 py-1 rounded text-sm ${
@@ -179,14 +179,14 @@ export default function DecisionTreePage() {
                         max="1"
                         value={node.probability || 0}
                         onChange={(e) => updateProbability(node.id, Number(e.target.value))}
-                        className="w-24 px-3 py-2 border rounded-lg"
+                        className="w-24 px-3 py-2 exp-input"
                       />
                     ) : (
                       <input
                         type="number"
                         value={node.value || 0}
                         onChange={(e) => updateOutcomeValue(node.id, Number(e.target.value))}
-                        className="w-32 px-3 py-2 border rounded-lg"
+                        className="w-32 px-3 py-2 exp-input"
                       />
                     )}
                   </td>
@@ -203,24 +203,27 @@ export default function DecisionTreePage() {
             value={result.enpv}
             prefix="¥"
             valueColor={result.enpv >= 0 ? "text-green-600" : "text-red-600"}
+            className="border border-gray-200 rounded-lg p-6"
           />
           <StatisticCard
             title="风险概率"
             value={result.riskProbability}
             suffix="%"
             valueColor={result.riskProbability < 50 ? "text-green-600" : "text-red-600"}
+            className="border border-gray-200 rounded-lg p-6"
           />
           <StatisticCard
             title="建议"
             value={result.recommendation === "可行" ? 1 : 0}
             suffix={result.recommendation}
             valueColor={result.recommendation === "可行" ? "text-green-600" : "text-red-600"}
+            className="border border-gray-200 rounded-lg p-6"
           />
         </div>
 
         {/* 图表 */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-4">各方案期望值</h2>
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">各方案期望值</h2>
           <LineChart
             title=""
             xAxisData={chartData.map((d) => d.name)}

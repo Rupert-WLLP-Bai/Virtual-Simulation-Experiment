@@ -61,18 +61,18 @@ export function StatisticCard({
   return (
     <Card className={cn(className)}>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+        <div className="text-sm font-medium text-gray-500 dark:text-gray-400 break-words leading-5">
           {title}
         </div>
         {icon && <div className="text-gray-400">{icon}</div>}
       </CardHeader>
       <CardContent>
-        <div className="flex items-baseline space-x-1">
+        <div className="flex flex-wrap items-baseline gap-x-1 gap-y-1 min-w-0">
           {prefix && (
-            <span className="text-lg text-gray-500">{prefix}</span>
+            <span className="text-lg text-gray-500 shrink-0">{prefix}</span>
           )}
           <span
-            className="text-3xl font-bold"
+            className="text-2xl md:text-3xl font-bold leading-tight min-w-0 break-all"
             style={valueColor ? { color: valueColor } : undefined}
           >
             {typeof value === "number"
@@ -80,7 +80,7 @@ export function StatisticCard({
               : value}
           </span>
           {suffix && (
-            <span className="text-lg text-gray-500">{suffix}</span>
+            <span className="text-lg text-gray-500 shrink-0">{suffix}</span>
           )}
         </div>
         {(description || (trend && trendValue)) && (

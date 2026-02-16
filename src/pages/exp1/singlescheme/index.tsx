@@ -50,16 +50,16 @@ export default function SingleschemePage() {
   }, [cashFlows]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6" id="experiment-content">
+    <div className="p-6 bg-white rounded-lg shadow" id="experiment-content">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">单方案财务评价</h1>
+          <h1 className="text-2xl font-bold text-gray-800">单方案财务评价</h1>
           <ExportPDF targetId="experiment-content" filename="单方案财务评价.pdf" />
         </div>
 
         {/* 输入参数 */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4">现金流配置</h2>
+        <div className="border border-gray-200 rounded-lg p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">现金流配置</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">折现率 (%)</label>
@@ -67,7 +67,7 @@ export default function SingleschemePage() {
                 type="number"
                 value={rate}
                 onChange={(e) => setRate(Number(e.target.value))}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 exp-input"
               />
             </div>
           </div>
@@ -82,14 +82,14 @@ export default function SingleschemePage() {
               </thead>
               <tbody>
                 {cashFlows.map((cf, index) => (
-                  <tr key={index} className="border-t">
-                    <td className="px-4 py-2">{index === 0 ? "初始投资" : `第${index}期`}</td>
+                  <tr key={index} className="border-t border-gray-200">
+                    <td className="px-4 py-2 text-gray-800">{index === 0 ? "初始投资" : `第${index}期`}</td>
                     <td className="px-4 py-2">
                       <input
                         type="number"
                         value={cf}
                         onChange={(e) => updateCashFlow(index, Number(e.target.value))}
-                        className="w-full px-3 py-2 border rounded-lg"
+                        className="w-full px-3 py-2 exp-input"
                       />
                     </td>
                     <td className="px-4 py-2 text-center">
@@ -106,7 +106,7 @@ export default function SingleschemePage() {
           </div>
           <button
             onClick={addCashFlow}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="mt-4 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-800/80 transition-colors"
           >
             添加现金流
           </button>
@@ -119,36 +119,41 @@ export default function SingleschemePage() {
             value={result.npv}
             prefix="¥"
             valueColor={result.feasible ? "text-green-600" : "text-red-600"}
+            className="border border-gray-200 rounded-lg p-6"
           />
           <StatisticCard
             title="内部收益率 (IRR)"
             value={result.irr !== null ? result.irr * 100 : 0}
             suffix="%"
             valueColor={result.irr !== null && result.irr > rate / 100 ? "text-green-600" : "text-red-600"}
+            className="border border-gray-200 rounded-lg p-6"
           />
           <StatisticCard
             title="动态回收期 (DPP)"
             value={result.dpp !== null ? result.dpp : 0}
             suffix="年"
             valueColor={result.dpp !== null && result.dpp < 5 ? "text-green-600" : "text-red-600"}
+            className="border border-gray-200 rounded-lg p-6"
           />
           <StatisticCard
             title="方案可行性"
             value={result.feasible ? 1 : 0}
             suffix={result.feasible ? "可行" : "不可行"}
             valueColor={result.feasible ? "text-green-600" : "text-red-600"}
+            className="border border-gray-200 rounded-lg p-6"
           />
           <StatisticCard
             title="综合评分"
             value={result.score}
             suffix="分"
             valueColor={result.score >= 60 ? "text-green-600" : "text-orange-600"}
+            className="border border-gray-200 rounded-lg p-6"
           />
         </div>
 
         {/* 图表 */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-4">现金流分析图</h2>
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">现金流分析图</h2>
           <LineChart
             title=""
             xAxisData={chartData.map((d) => d.name)}
