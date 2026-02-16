@@ -50,6 +50,13 @@ const server = serve({
       },
     },
 
+    "/api/modules": {
+      async GET() {
+        const modules = menuAPI.getModules();
+        return Response.json(modules);
+      },
+    },
+
     // 实验记录 API
     "/api/experiment-records": {
       async POST(req) {

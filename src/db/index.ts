@@ -15,7 +15,7 @@ db.exec(`
 
   CREATE TABLE IF NOT EXISTS modules (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
+    name TEXT UNIQUE NOT NULL,
     description TEXT,
     order_num INTEGER DEFAULT 0
   );
@@ -24,7 +24,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     module_id INTEGER,
     name TEXT NOT NULL,
-    path TEXT NOT NULL,
+    path TEXT UNIQUE NOT NULL,
     description TEXT,
     order_num INTEGER DEFAULT 0,
     FOREIGN KEY (module_id) REFERENCES modules(id)
@@ -44,7 +44,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     parent_id INTEGER,
     name TEXT NOT NULL,
-    path TEXT,
+    path TEXT UNIQUE,
     icon TEXT,
     order_num INTEGER DEFAULT 0,
     visible INTEGER DEFAULT 1
@@ -82,12 +82,6 @@ if (userCount.count === 0) {
     (4, '蒙特卡洛模拟', 'montecarlo', '蒙特卡洛风险模拟', 4),
     (5, '决策树分析', 'decisiontree', '决策树风险分析', 1);
 
-    INSERT OR IGNORE INTO modules (name, description, order_num) VALUES
-    ('测试成本', '软件测试成本估算', 4);
-
-    INSERT OR IGNORE INTO experiments (module_id, name, path, description, order_num) VALUES
-    (4, '蒙特卡洛模拟', 'montecarlo', '蒙特卡洛风险模拟', 4);
-
     INSERT INTO menus (parent_id, name, path, icon, order_num) VALUES
     (NULL, '首页', '/home', 'home', 1),
     (NULL, '实验中心', '/experiments', 'flask', 2),
@@ -99,6 +93,86 @@ if (userCount.count === 0) {
     (NULL, '个人中心', '/personal', 'user', 3);
   `);
 }
+
+// 幂等迁移：确保新增模块和实验能自动添加
+// 首先创建 UNIQUE 索引（如果不存在）以确保幂等性
+db.exec(`
+  CREATE INDEX IF NOT EXISTS idx_modules_name ON modules(name);
+  CREATE INDEX IF NOT EXISTS idx_experiments_path ON experiments(path);
+  CREATE INDEX IF NOT EXISTS idx_menus_path ON menus(path);
+`);
+
+// 幂等迁移：使用 INSERT OR IGNORE 在 UNIQUE 索引存在时不会重复插入
+db.exec(`
+  INSERT OR IGNORE INTO modules (name, description, order_num) VALUES
+  ('测试成本', '软件测试成本估算', 4);
+
+  INSERT OR IGNORE INTO experiments (module_id, name, path, description, order_num) VALUES
+  (2, '动态投资回收期', 'dongtaitouzi', '动态投资回收期计算', 3),
+  (2, '重置期', 'chongzhiqi', '重置期分析', 4),
+  (2, '生命周期', 'shengmingzhouqi', '软件经济生命周期计算', 5),
+  (4, '蒙特卡洛模拟', 'montecarlo', '蒙特卡洛风险模拟', 4);
+
+  INSERT OR IGNORE INTO menus (name, path, icon, order_num) VALUES
+  ('动态投资回收期', '/exp7/dongtaitouzi', 'clock', 6),
+  ('重置期', '/exp7/chongzhiqi', 'refresh-cw', 7),
+  ('生命周期', '/exp7/shengmingzhouqi', 'cycle', 8);
+
+  -- C-1: 软件度量类实验（10个）
+  INSERT OR IGNORE INTO experiments (module_id, name, path, description, order_num) VALUES
+  (1, 'GB11国标功能点', 'gb11', 'GB11国标功能点度量', 4),
+  (1, 'IFPUG功能点', 'ifpug', 'IFPUG功能点度量', 5),
+  (1, 'NESMA功能点', 'nesma', 'NESMA功能点度量', 6),
+  (1, 'GB21国标功能点', 'gb21', 'GB21国标功能点度量', 7),
+  (1, '类比法估算', 'leibi', '类比法软件规模估算', 8),
+  (1, '类推法估算', 'leitui', '类推法软件规模估算', 9),
+  (1, '敏捷方法估算', 'minjie', '敏捷方法故事点估算', 10),
+  (1, 'GB31国标功能点', 'gb31', 'GB31国标功能点度量', 11),
+  (1, 'GB41国标功能点', 'gb41', 'GB41国标功能点度量', 12),
+  (1, '信息化评估', 'xinxihuapinggu', '信息化项目评估', 13);
+
+  INSERT OR IGNORE INTO menus (name, path, icon, order_num) VALUES
+  ('GB11国标功能点', '/exp1/gb11', 'file-text', 10),
+  ('IFPUG功能点', '/exp1/ifpug', 'file-text', 11),
+  ('NESMA功能点', '/exp1/nesma', 'file-text', 12),
+  ('GB21国标功能点', '/exp2/gb21', 'file-text', 13),
+  ('类比法估算', '/exp2/leibi', 'git-compare', 14),
+  ('类推法估算', '/exp2/leitui', 'arrow-right', 15),
+  ('敏捷方法估算', '/exp2/minjie', 'zap', 16),
+  ('GB31国标功能点', '/exp3/gb31', 'file-text', 17),
+  ('GB41国标功能点', '/exp4/gb41', 'file-text', 18),
+  ('信息化评估', '/exp2/xinxihuapinggu', 'bar-chart-2', 19);
+
+  -- C-2: 投资评价类实验（6个）
+  INSERT OR IGNORE INTO experiments (module_id, name, path, description, order_num) VALUES
+  (2, '博弈论决策', 'boyi', '博弈论投资决策', 6),
+  (2, '期望净现值法', 'qiwangjingxianzhi', '期望净现值法投资决策', 7),
+  (2, '简化计算模型', 'jianhuajisuan', '投资决策简化计算', 8),
+  (2, '盈利能力分析', 'yingli', '投资项目盈利能力分析', 9),
+  (2, '偿债能力分析', 'changzhai', '投资项目偿债能力分析', 10),
+  (2, '生存能力分析', 'shengcun', '投资项目生存能力分析', 11);
+
+  INSERT OR IGNORE INTO menus (name, path, icon, order_num) VALUES
+  ('博弈论决策', '/exp8/boyi', 'git-branch', 20),
+  ('期望净现值法', '/exp8/qiwangjingxianzhi', 'trending-up', 21),
+  ('简化计算模型', '/exp10/jianhuajisuan', 'calculator', 22),
+  ('盈利能力分析', '/exp10/yingli', 'dollar-sign', 23),
+  ('偿债能力分析', '/exp10/changzhai', 'credit-card', 24),
+  ('生存能力分析', '/exp10/shengcun', 'activity', 25);
+
+  -- C-3: 分析评价类实验（4个）
+  INSERT OR IGNORE INTO experiments (module_id, name, path, description, order_num) VALUES
+  (5, '分析与评价', 'fenxiyupingjia', '软件项目分析与评价', 2),
+  (5, '效益分析', 'xiaoyi', '软件项目效益分析', 3),
+  (5, '效果分析', 'xiaoguo', '软件项目效果分析', 4),
+  (5, 'EVA挣值分析', 'eva', '挣值分析进度成本控制', 5);
+
+  INSERT OR IGNORE INTO menus (name, path, icon, order_num) VALUES
+  ('分析与评价', '/exp11/fenxiyupingjia', 'pie-chart', 26),
+  ('效益分析', '/exp12/xiaoyi', 'trending-up', 27),
+  ('效果分析', '/exp13/xiaoguo', 'target', 28),
+  ('EVA挣值分析', '/exp14/eva', 'activity', 29);
+`);
 
 export { db };
 export default db;

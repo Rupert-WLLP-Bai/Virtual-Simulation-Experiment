@@ -28,9 +28,15 @@ export function Sidebar({ onLogout }: SidebarProps) {
   const [expandedModules, setExpandedModules] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    fetch("/api/menu/student_experiment")
-      .then((res) => res.json())
-      .then((experiments: Experiment[]) => {
+    // Fetch modules and experiments in parallel
+    Promise.all([
+      fetch("/api/menu/student_experiment").then((res) => res.json()),
+      fetch("/api/modules").then((res) => res.json()).catch(() => []),
+    ])
+      .then(([experiments, modules]: [Experiment[], {id: number, name: string}[]]) => {
+        // Create module id to name mapping
+        const moduleMap = new Map(modules.map((m: {id: number, name: string}) => [m.id, m.name]));
+
         // Group experiments by module_id
         const grouped = experiments.reduce((acc, exp) => {
           if (!acc[exp.module_id]) {
@@ -42,7 +48,7 @@ export function Sidebar({ onLogout }: SidebarProps) {
 
         const moduleList: Module[] = Object.entries(grouped).map(([moduleId, exps]) => ({
           id: Number(moduleId),
-          name: `实验 ${moduleId}`,
+          name: moduleMap.get(Number(moduleId)) || `实验 ${moduleId}`,
           experiments: exps,
         }));
 

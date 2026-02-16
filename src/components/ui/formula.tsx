@@ -30,7 +30,9 @@ export function Formula({
     if (containerRef.current) {
       try {
         setHasRenderError(false);
-        katex.render(formula, containerRef.current, {
+        // 自动将 * 转换为 \times 以正确显示乘号
+        const processedFormula = formula.replace(/\s*\*\s*/g, " \\times ");
+        katex.render(processedFormula, containerRef.current, {
           displayMode,
           throwOnError,
           errorColor,

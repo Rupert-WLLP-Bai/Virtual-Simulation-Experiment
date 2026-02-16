@@ -37,6 +37,10 @@ export const menuAPI = {
   getStudentExperiments: () => {
     return db.query("SELECT * FROM experiments ORDER BY module_id, order_num").all();
   },
+
+  getModules: () => {
+    return db.query("SELECT * FROM modules ORDER BY order_num").all();
+  },
 };
 
 // 实验记录 API

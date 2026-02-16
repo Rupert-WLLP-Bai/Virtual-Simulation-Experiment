@@ -169,7 +169,7 @@ export default function ShengmingzhouqiPage() {
 
           <FormulaBlock
             formulas={[
-              { label: "资本回收 CR(i)", formula: "CR(i) = (P - F) * (A/P,i,n) + F * i" },
+              { label: "资本回收 CR(i)", formula: String.raw`CR(i) = (P - F) \times (A/P,i,n) + F \times i` },
               { label: "复利现值系数 P/F", formula: "P/F = 1 / (1 + i)^n" },
               { label: "总经济成本", formula: "Total AE(i) = CR(i) + AE(i) of O&M" },
             ]}

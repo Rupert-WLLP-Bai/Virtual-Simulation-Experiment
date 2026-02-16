@@ -26,7 +26,7 @@ export default function JinxianzhiPage() {
   }, [cashflows, rate]);
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow">
+    <div className="p-6 bg-white rounded-lg shadow" id="experiment-content">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl font-bold mb-6 text-gray-800">NPV/IRR 投资评价</h1>
 

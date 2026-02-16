@@ -20,13 +20,27 @@
     @apply focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200;
   }
 
+  .dark .exp-input {
+    @apply bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500;
+    @apply focus:border-blue-400 focus:ring-blue-900;
+  }
+
   .exp-select {
     @apply bg-white border border-gray-300 rounded-lg text-gray-900 shadow-xs transition-colors;
     @apply focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200;
   }
 
+  .dark .exp-select {
+    @apply bg-gray-800 border-gray-600 text-gray-100;
+    @apply focus:border-blue-400 focus:ring-blue-900;
+  }
+
   .exp-delete-btn {
     @apply text-red-600 transition-colors hover:text-red-800;
+  }
+
+  .dark .exp-delete-btn {
+    @apply text-red-400 hover:text-red-300;
   }
 }
 

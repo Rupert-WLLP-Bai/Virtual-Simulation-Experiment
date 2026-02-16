@@ -8,6 +8,16 @@ const experiments: Record<string, React.LazyExoticComponent<React.ComponentType>
   cosmic: lazy(() => import("@/pages/exp1/cosmic/index.tsx")),
   markii: lazy(() => import("@/pages/exp1/markii/index.tsx")),
   singlescheme: lazy(() => import("@/pages/exp1/singlescheme/index.tsx")),
+  gb11: lazy(() => import("@/pages/exp1/gb11/index.tsx")),
+  ifpug: lazy(() => import("@/pages/exp1/ifpug/index.tsx")),
+  nesma: lazy(() => import("@/pages/exp1/nesma/index.tsx")),
+  gb21: lazy(() => import("@/pages/exp2/gb21/index.tsx")),
+  leibi: lazy(() => import("@/pages/exp2/leibi/index.tsx")),
+  leitui: lazy(() => import("@/pages/exp2/leitui/index.tsx")),
+  minjie: lazy(() => import("@/pages/exp2/minjie/index.tsx")),
+  gb31: lazy(() => import("@/pages/exp3/gb31/index.tsx")),
+  gb41: lazy(() => import("@/pages/exp4/gb41/index.tsx")),
+  xinxihuapinggu: lazy(() => import("@/pages/exp2/xinxihuapinggu/index.tsx")),
   tanpaifang: lazy(() => import("@/pages/exp6/tanpaifang/index.tsx")),
   jinxianzhi: lazy(() => import("@/pages/exp7/jinxianzhi/index.tsx")),
   yinkuipingheng: lazy(() => import("@/pages/exp7/yinkuipingheng/index.tsx")),
@@ -15,9 +25,19 @@ const experiments: Record<string, React.LazyExoticComponent<React.ComponentType>
   chongzhiqi: lazy(() => import("@/pages/exp7/chongzhiqi/index.tsx")),
   shengmingzhouqi: lazy(() => import("@/pages/exp7/shengmingzhouqi/index.tsx")),
   minganxing: lazy(() => import("@/pages/exp8/minganxing/index.tsx")),
+  boyi: lazy(() => import("@/pages/exp8/boyi/index.tsx")),
+  qiwangjingxianzhi: lazy(() => import("@/pages/exp8/qiwangjingxianzhi/index.tsx")),
   buqueding: lazy(() => import("@/pages/exp9/buqueding/index.tsx")),
   testcost: lazy(() => import("@/pages/exp4/testcost/index.tsx")),
   decisiontree: lazy(() => import("@/pages/exp10/decisiontree/index.tsx")),
+  jianhuajisuan: lazy(() => import("@/pages/exp10/jianhuajisuan/index.tsx")),
+  yingli: lazy(() => import("@/pages/exp10/yingli/index.tsx")),
+  changzhai: lazy(() => import("@/pages/exp10/changzhai/index.tsx")),
+  shengcun: lazy(() => import("@/pages/exp10/shengcun/index.tsx")),
+  fenxiyupingjia: lazy(() => import("@/pages/exp11/fenxiyupingjia/index.tsx")),
+  xiaoyi: lazy(() => import("@/pages/exp12/xiaoyi/index.tsx")),
+  xiaoguo: lazy(() => import("@/pages/exp13/xiaoguo/index.tsx")),
+  eva: lazy(() => import("@/pages/exp14/eva/index.tsx")),
   montecarlo: lazy(() => import("@/pages/exp47/montecarlo/index.tsx")),
 };
 
@@ -41,9 +61,9 @@ export default function ExperimentPage() {
   const ExperimentComponent = experiments[key];
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex h-screen overflow-hidden bg-gray-100">
       <Sidebar onLogout={logout} />
-      <main className="flex-1 p-6 overflow-auto">
+      <main className="flex-1 p-6 overflow-auto m-0">
         {ExperimentComponent !== undefined ? (
           <Suspense fallback={<Loading />}>
             <ExperimentComponent />
