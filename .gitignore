@@ -1,3 +1,6 @@
+# Agent Team orchestration docs (local only)
+.agent/
+
 # dependencies (bun install)
 node_modules
 
